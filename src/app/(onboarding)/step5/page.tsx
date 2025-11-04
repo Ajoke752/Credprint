@@ -6,14 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import OnboardingLayout from "@/src/components/onboarding/OnboardingLayout";
-import StepHeader from "@/src/components/onboarding/StepHeader";
 import FileUpload from "@/src/components/forms/FileUpload";
 import { Button } from "@/src/components/ui/Button";
 import { useOnboarding } from "@/src/hooks/useOnboarding";
 
-// -------------------------------------------------
-// Zod schema – same validation as step3 (any image or PDF)
-// -------------------------------------------------
 const schema = z.object({
   id: z
     .string()
@@ -24,7 +20,7 @@ const schema = z.object({
     ),
 });
 
-export const dynamic = "force-dynamic"; // ← disables static prerender
+export const dynamic = "force-dynamic";
 
 export default function Step5() {
   const { goNext } = useOnboarding();
@@ -48,31 +44,41 @@ export default function Step5() {
 
   return (
     <OnboardingLayout currentStep={5}>
-      <StepHeader
-        title="Upload Your ID"
-        subtitle="NIN, Driver’s License, or International Passport"
-      />
+      <div className="flex flex-col space-y-6">
+        {/* Header */}
+        <div className="text-center space-y-3">
+          <h1 className="text-2xl font-bold text-gray-900">Upload Your ID</h1>
+          <p className="text-gray-600 text-base">
+            NIN, Driver's License, or International Passport
+          </p>
+        </div>
 
-      <FileUpload
-        name="id"
-        control={control}
-        setValue={setValue}
-        label="Take photo or upload"
-        accept="image/*,.pdf"
-      />
+        {/* File Upload */}
+        <FileUpload
+          name="id"
+          control={control}
+          setValue={setValue}
+          label="Take photo or upload"
+          accept="image/*,.pdf"
+        />
 
-      {errors.id && (
-        <p className="text-sm text-red-600 text-center">{errors.id.message}</p>
-      )}
+        {/* Error Message */}
+        {errors.id && (
+          <p className="text-sm text-red-600 text-center">
+            {errors.id.message}
+          </p>
+        )}
 
-      <Button
-        onClick={handleSubmit(onSubmit)}
-        disabled={!file}
-        size="lg"
-        className="w-full"
-      >
-        Continue
-      </Button>
+        {/* Continue Button */}
+        <Button
+          onClick={handleSubmit(onSubmit)}
+          disabled={!file}
+          size="lg"
+          className="w-full"
+        >
+          Continue
+        </Button>
+      </div>
     </OnboardingLayout>
   );
 }

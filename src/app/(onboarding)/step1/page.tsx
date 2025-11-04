@@ -4,6 +4,7 @@ import OnboardingLayout from "@/src/components/onboarding/OnboardingLayout";
 import StepHeader from "@/src/components/onboarding/StepHeader";
 import { Button } from "@/src/components/ui/Button";
 import { useOnboarding } from "@/src/hooks/useOnboarding";
+import Image from "next/image";
 
 const OnboardingLayoutAny = OnboardingLayout as React.ComponentType<{
   children?: React.ReactNode;
@@ -15,21 +16,35 @@ export default function Step1() {
 
   return (
     <OnboardingLayoutAny currentStep={1}>
-      <StepHeader
-        title="Build your digital credit blueprint"
-        subtitle="Answer a few questions to get started"
-      />
-      <div className="bg-primary-light rounded-2xl p-6 text-center">
-        <div className="w-20 h-20 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center">
-          <span className="text-3xl text-white">ID</span>
+      <div className="flex flex-col items-center text-center space-y-6">
+        {/* Illustration */}
+        <div className="w-full max-w-xs mb-4">
+          <Image
+            src="/images/OnStep1.png"
+            alt="Build your digital credit identity"
+            width={300}
+            height={300}
+            className="w-full h-auto"
+          />
         </div>
-        <p className="text-sm text-gray-700">
-          We’ll create a secure credit profile in under 5 minutes
-        </p>
+
+        {/* Title and Subtitle */}
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold text-gray-900 px-4">
+            Build your digital credit identity
+          </h1>
+          <p className="text-gray-600 text-base px-6">
+            Answer a few questions to get started
+          </p>
+        </div>
+
+        {/* CTA Button */}
+        <div className="w-full pt-4">
+          <Button onClick={goNext} size="lg" className="w-full">
+            Next
+          </Button>
+        </div>
       </div>
-      <Button onClick={goNext} size="lg">
-        Next
-      </Button>
     </OnboardingLayoutAny>
   );
 }
