@@ -89,7 +89,7 @@ export default function HeroSection() {
           <div className="relative">
             <div className="relative w-full aspect-square lg:aspect-auto lg:h-[600px]">
               <Image
-                src="/images/hero-woman.jpg"
+                src="/images/CredaHero.png"
                 alt="Happy woman using CredPrint"
                 fill
                 className="object-cover rounded-2xl shadow-2xl"
