@@ -1,5 +1,5 @@
-// hooks/useOnboarding.ts
 import { useRouter, usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { useEffect } from "react";
 
 const steps = [
@@ -17,6 +17,14 @@ const steps = [
 export function useOnboarding() {
   const router = useRouter();
   const pathname = usePathname();
+  const { isSignedIn } = useUser();
+
+  useEffect(() => {
+    // Redirect to home if not signed in
+    if (!isSignedIn && !pathname.includes("sign-")) {
+      router.push("/");
+    }
+  }, [isSignedIn, pathname, router]);
 
   const currentIndex = steps.findIndex((s) => pathname.includes(s));
   const currentStep = currentIndex >= 0 ? currentIndex + 1 : 1;
@@ -25,8 +33,6 @@ export function useOnboarding() {
   const goNext = () => {
     const next = steps[currentIndex + 1];
     if (next) {
-      localStorage.setItem("onboardingStep", next);
-      // Remove (onboarding) from URL - route groups are not part of URLs
       router.push(`/${next}`);
     }
   };
@@ -34,14 +40,9 @@ export function useOnboarding() {
   const goBack = () => {
     const prev = steps[currentIndex - 1];
     if (prev) {
-      localStorage.setItem("onboardingStep", prev);
       router.push(`/${prev}`);
     }
   };
-
-  useEffect(() => {
-    localStorage.setItem("onboardingStep", steps[currentIndex]);
-  }, [currentIndex]);
 
   return { currentStep, totalSteps, goNext, goBack };
 }
