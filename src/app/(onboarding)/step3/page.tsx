@@ -21,6 +21,15 @@ const schema = z.object({
     .refine(
       (val) => /^data:(application\/pdf|image\/(jpeg|png));base64,/.test(val),
       "Only PDF, JPG or PNG files are allowed"
+    )
+    .refine(
+      (val) => {
+        const base64Data = val.split(',')[1];
+        const sizeInBytes = base64Data ? (base64Data.length * 3) / 4 : 0;
+        const sizeInMB = sizeInBytes / (1024 * 1024);
+        return sizeInMB <= 10;
+      },
+      "File size must be less than 10MB"
     ),
 });
 

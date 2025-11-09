@@ -43,16 +43,25 @@ export default function FileUpload({
     return obj;
   }, {} as Record<string, string[]>);
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, fileRejections } = useDropzone({
     onDrop,
     accept: acceptObj,
     multiple: false,
+    maxSize: 10 * 1024 * 1024,
+    onDropRejected: (rejections) => {
+      const rejection = rejections[0];
+      if (rejection?.errors[0]?.code === 'file-too-large') {
+        alert('File is too large. Maximum size is 10MB.');
+      } else if (rejection?.errors[0]?.code === 'file-invalid-type') {
+        alert('Invalid file type. Please upload PDF, JPG, or PNG.');
+      }
+    },
   });
 
   const value = control._formValues?.[name];
 
   return (
-    <div>
+    <div className="w-full">
       {value ? (
         <div className="border-2 border-dashed border-green-200 rounded-xl p-4 text-center">
           {value.startsWith("data:image") ? (
@@ -81,6 +90,11 @@ export default function FileUpload({
           <p className="text-xs text-gray-500 mt-1">
             {accept.replace(/,/g, ", ")} (≤10 MB)
           </p>
+          {fileRejections.length > 0 && (
+            <p className="text-xs text-red-600 mt-2">
+              {fileRejections[0].errors[0].message}
+            </p>
+          )}
         </div>
       )}
     </div>
